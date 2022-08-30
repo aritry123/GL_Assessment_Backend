@@ -26,6 +26,19 @@ const userModel=mongoose.model("UserCollection",{
         type:String,
         default:"user",
         enum:['user','admin']
+    },
+    activation:{
+        type:Boolean,
+        default:true,
+        enum:[true,false]
+    },
+    lock:{
+        type:Boolean,
+        default:false,
+        enum:[false,true]
+    },
+    time:{
+        type:Number
     }
 })
 module.exports=userModel

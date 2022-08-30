@@ -10,8 +10,12 @@ router.post('/signin',(req,res)=>{
         if(result){
             if(data.password===result.password){
                 const token=jwt.sign({email:data.email,role:result.role},'aritry')
-                res.status(200).cookie('tokenauth',token,{sameSite:'strict',httpOnly:true}) // ,maxAge:3600000
-                res.send({"msg":'you are authenticated',"status":true,"role":result.role})
+                res.status(200).cookie('tokenauth',token,{sameSite:'strict',httpOnly:true,maxAge:60000})
+                userModel.updateOne({_id:result._id},{
+                    $set:{
+                        activation:true
+                    }
+                }).then((results)=>res.send({"msg":'you are authenticated',"status":true,"role":result.role,"email":result.email,"tokenTime":60000})).catch((err)=>res.send({"msg":'some error occured!',"status":false}))
             } else {
                 res.send({"msg":'password is wrong, authentication failed!',"status":false})
             }
